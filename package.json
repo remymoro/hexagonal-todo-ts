@@ -7,7 +7,8 @@
     "typecheck": "tsc --noEmit",
     "dev": "tsx watch app/src/adapters/web/fastify/server.ts",
     "start": "tsx app/src/adapters/web/fastify/server.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "fastify": "^5.0.0",
