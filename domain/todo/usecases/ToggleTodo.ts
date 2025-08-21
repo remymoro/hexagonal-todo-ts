@@ -1,6 +1,5 @@
 import { TodoRepository } from "../TodoRepository";
 import { TodoId } from "../Todo";
-
 export class ToggleTodo {
   constructor(private readonly repo: TodoRepository) {}
   async execute(id: TodoId) {
