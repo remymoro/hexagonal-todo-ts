@@ -1,5 +1,5 @@
-import { TodoId, Todo } from "../../../../Todo";
-import { TodoRepository } from "../../../../TodoRepository";
+import { Todo, TodoId } from "@domain/todo/Todo";
+import { TodoRepository } from "@domain/todo/TodoRepository";
 
 export class InMemoryTodoRepository implements TodoRepository {
   private store = new Map<TodoId, Todo>();
