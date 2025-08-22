@@ -1,3 +1,20 @@
+/**
+ * Adaptateur Web (Fastify) — Point d'entrée HTTP de l'application
+ *
+ * Ce module expose la fonction buildApp qui configure et retourne une instance Fastify prête à servir l'API Todo.
+ *
+ * Points clés :
+ * - Sécurisation (helmet), limitation de débit (rateLimit), CORS pour le développement front.
+ * - Validation et typage automatique des requêtes/réponses grâce à Zod et fastify-type-provider-zod.
+ * - Les routes HTTP délèguent toute la logique métier aux use cases du domaine (via l'objet usecases).
+ * - Les schémas Zod garantissent que les données échangées sont toujours valides.
+ *
+ * Avantages :
+ * - L'adaptateur web ne connaît rien de la persistance ni du métier : il ne fait qu'orchestrer les appels aux use cases.
+ * - Facilement testable et évolutif : on peut changer d'adaptateur (REST, GraphQL...) sans toucher au domaine.
+ * - Séparation claire des responsabilités, conforme à l'architecture en couches.
+ */
+
 // app/src/adapters/web/fastify/app.ts
 import fastify from "fastify";
 import helmet from "@fastify/helmet";
@@ -48,6 +65,15 @@ export async function buildApp() {
     try { return reply.send(await usecases.toggleTodo.execute(req.params.id)); }
     catch (e: any) { return reply.code(404).send({ error: e?.message ?? "Not Found" }); }
   });
+
+app.post("/todos/suggest-title", {
+  schema: { body: z.object({ context: z.string() }), response: { 200: z.object({ title: z.string() }) } }
+}, async (req, reply) => {
+  const title = await usecases.suggestTodoTitle.execute(req.body.context);
+  return reply.send({ title });
+});
+  
+
 
   return app;
 }
